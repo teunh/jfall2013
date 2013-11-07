@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>jfall-static</artifactId>
+    <groupId>nl.jug.jfall</groupId>
+    <packaging>jar</packaging>
+    <name>jfall-static</name>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <artifactId>FEJfall</artifactId>
+        <groupId>nl.jug.jfall</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>Builden met GRUNT</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+
+                            <!-- In dit stuk code wordt er vanuit gegaan dat not niet 
+                                 alles geinstalleerd is vandaar de npm install.
+                                 Dit maakt het op buildservers mogelijk dat projecten
+                                 verschillende versies van bijv. karma/grunt gebruiken.
+                            -->
+                            <target name="building">
+                                <echo>
+                                    ***************************************************
+                                    **                  NPM INSTALL                  **
+                                    ***************************************************
+                                </echo>
+                                <exec executable="bash" dir="${project.basedir}"  failonerror="true">
+                                    <arg line="-c 'npm config set color false'"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"  failonerror="true">
+                                    <arg line="-c 'npm install'"/>
+                                </exec>
+                                <echo>
+                                    ***************************************************
+                                    **                     bower                     **
+                                    ***************************************************
+                                </echo>
+                                <exec executable="bash" dir="${project.basedir}"  resultproperty="cmdresult">
+                                    <arg line="-c 'npm install bower'"/>
+                                </exec>
+                                <exec executable="bash" dir="${project.basedir}"  resultproperty="cmdresult">
+                                    <arg line="-c 'bower install'"/>
+                                </exec>
+                                <echo>
+                                    ***************************************************
+                                    **                     GRUNT                     **
+                                    ***************************************************
+                                </echo>
+                                <exec executable="bash" dir="${project.basedir}"  resultproperty="cmdresult">
+                                    <arg line="-c 'grunt --no-color > grunt.status'"/>
+                                </exec>
+
+                                <loadfile property="grunt.status" srcFile="grunt.status"/>
+                                <echo>${grunt.status}</echo>
+                                <delete file="grunt.status" quiet="true"/>
+                                <condition property="cmdsuccess">
+                                    <equals arg1="${cmdresult}" arg2="0"/>
+                                </condition>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                    	<id>Testen met KARMA</id>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <target name="building">
+                                <echo>
+                                    ***************************************************
+                                    **                  KARMA INSTALL                **
+                                    ***************************************************
+                                </echo>
+                                <exec executable="bash" dir="${project.basedir}"  failonerror="true">
+                                    <arg line="-c 'npm install karma'"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--Plugin waarmee unittest gerund en geraporteerd worden in junit formaat -->
+            <plugin>
+                <groupId>com.kelveden</groupId>
+                <artifactId>maven-karma-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+					<browsers>PhantomJS</browsers>
+					<reporters>dots,junit</reporters>
+					<colors>false</colors>
+					<autoWatch>false</autoWatch>
+		        </configuration>
+            </plugin>
+
+            <!-- Bij het cleanen moeten ook de bower en grunt folders opgeruimd worden -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>node_modules</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>.tmp</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>app/bower_components</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

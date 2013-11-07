@@ -1,0 +1,19 @@
+{
+    "app": {
+        "naam": "JFall"
+    },
+    "teksten": {
+        "taak": "Taak",
+        "proces": "Proces",
+        "status": "Status",
+        "ontvangen": "Ontvangen",
+        "acties": "Acties",
+        "filter": "Filter",
+        "urgentie": "Urgentie"
+    },
+    "acties": {
+        "uitvoeren": "Uitvoeren",
+        "inbehandeling": "In behandeling",
+        "gereedmelden": "Gereed melden"
+    }
+}

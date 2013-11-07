@@ -1,0 +1,39 @@
+body {
+    background: #fafafa;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333;
+}
+.taken-info-balk {
+    background: #2979E7;
+    display: block;
+}
+
+.header-achtergrond {
+    /*background: #A5CFCE;*/
+    display: block;
+}
+.header-achtergrond p {
+    color: white;
+}
+
+.hero-unit {
+    margin: 50px auto 0 auto;
+    width: 300px;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 30px;
+    background-color: #eee;
+    border-radius: 6px;
+    padding: 60px;
+}
+
+.hero-unit h1 {
+    font-size: 60px;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.done-true {
+    text-decoration: line-through;
+    color: grey;
+}

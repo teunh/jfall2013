@@ -1,0 +1,45 @@
+<h1>JFall AngularJS</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-hover table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th ng-i18next="teksten.taak"></th>
+                    <th ng-i18next="teksten.proces"></th>
+                    <th class="col-md-5" ng-i18next="teksten.status"></th>
+                    <th><a id="lnkSortUrgentie" href="" ng-click="changeOrder('urgentie.value')" ng-i18next="teksten.ontvangen"></a></th>
+                    <th ng-i18next="teksten.acties" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="taak in taken | orderBy:predicate:reverse | filter:filter">
+                    <td>{{taak.id}}</td>
+                    <td style="white-space: nowrap;">
+                        {{taak.titel}}
+                        <br/>
+                    </td>
+                    <td style="white-space: nowrap;">
+                        {{taak.proces}}
+                    </td>
+                    <td style="white-space: nowrap;">
+                        {{taak.status}}
+                        <br/>
+                        <span class="label label-default">{{taak.behandelaar}}</span>
+                    </td>
+                    <td class="col col-md-3" style="white-space: nowrap;"><span>{{toonDatum(taak.startdatum)}}</span><span class="label pull-right" ng-class="bepaalUrgentieClass(taak.urgentie)">&nbsp;</span></td>
+                    <td ng-hide="taak.taakactie" colspan="2">
+                        <button class="btn btn-default" disabled>In behandeling</button>
+                    </td>
+                    <td ng-show="taak.taakactie.behandelaars">
+                        <select title="Toewijzen" ng-model="selectedItem" ng-options="t for t in taak.taakactie.behandelaars" data-style="btn-default" bs-select></select>
+                    </td>
+                    <td ng-show="taak.taakactie.behandelaars">
+                        <button class="btn btn-primary" ng-click="doAction()">{{taak.taakactie.type}}</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
