@@ -11,6 +11,7 @@ In deze demo worden een aantal aspecten getoond:
  - security
  - i18n
 
+ps. zonder NumberFormatException ;-)
 
 Getting started:
 
